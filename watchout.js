@@ -1,5 +1,6 @@
 // start slingin' some d3 here.
-
+window.score = 0;
+window.collisions=0;
 
 var axes ={
   'x': d3.scale.linear().domain([0,100]).range([0,700]),
@@ -12,16 +13,13 @@ var gameBoard = d3.select('body').append('svg:svg')
 
 
 
-
-
-var createEnemies = _.range(0,20).map(function(i){
+var createEnemies = _.range(0,10).map(function(i){
     var enemy = {};
     enemy['id'] = i;
     enemy['x'] = axes.x(Math.random()*100);
     enemy['y'] = axes.y(Math.random()*100);
     return enemy;
   });
-
 
 var enemies = gameBoard.selectAll('circle.enemy')
             .data(createEnemies, function(enemy){ return enemy.id;});
@@ -35,12 +33,8 @@ var enemies = gameBoard.selectAll('circle.enemy')
         return enemy.y;
       })
       .attr('r', 10)
-enemies.exit()
-  .remove()
-
-
-
-
+// enemies.exit()
+//   .remove()
 
 var drag = d3.behavior.drag()
              .on('dragstart', function() { players.style({'fill' : 'green', 'stroke': 'green'}); })
@@ -49,11 +43,9 @@ var drag = d3.behavior.drag()
              .on('dragend', function() { players.style({'fill': 'red', 'stroke': 'red'});});
 
 
-
-
  var player = [{
-   'x' : axes.x(50),
-   'y' : axes.y(50),
+   'cx' : axes.x(50),
+   'cy' : axes.y(50),
 }]
 
  var players = gameBoard.selectAll('circle.player')
@@ -62,22 +54,38 @@ var drag = d3.behavior.drag()
  players.enter()
   .append('svg:circle')
    .attr('class', 'player')
-   .attr('cx', axes.x(50))
-   .attr('cy', axes.y(50))
+    .attr('cx', function(d){ return d.cx})
+   .attr('cy', function(d){ return d.cy})
    .attr('r', 10)
     .style({'fill': 'red','stroke':'red'})
     .call(drag)
  players.exit()
    .remove()
 
-
 var update = function(){
 enemies.transition()
   .duration(1000)
    .attr('cx', function(enemy){enemy.x = axes.x(Math.random()*100); return enemy.x;})
    .attr('cy', function(enemy){enemy.y = axes.y(Math.random()*100); return enemy.y;})
-  //.tween('custom',tweenToNextPosition)
+   .tween('custom',checkCollisionTween);
 }
 
- setInterval(update,1000);
 
+var checkCollisionTween = function(){
+var radiusSum = 20;
+return function(){
+    var eX = d3.select(this).attr("cx");
+    var eY = d3.select(this).attr("cy");
+    var pX = d3.selectAll("circle.player").attr("cx");
+    var pY = d3.selectAll("circle.player").attr("cy");
+    var xDiff=eX - pX;
+    var yDiff=eY - pY;
+    var dist = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+    if(dist < radiusSum){
+      window.collisions++;
+      console.log(window.collisions);
+    }
+  }
+};
+
+ setInterval(update,1000);
