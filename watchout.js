@@ -8,7 +8,12 @@ var axes ={
 var gameBoard = d3.select('body').append('svg:svg')
                 .attr('width', 700)
                 .attr('height', 450)
-                .style({'border': 'solid'})
+                .style({'border': 'solid'});
+
+
+
+
+
 var createEnemies = _.range(0,100).map(function(i){
     var enemy = {};
     enemy['id'] = i;
@@ -20,27 +25,6 @@ var createEnemies = _.range(0,100).map(function(i){
 
 var enemies = gameBoard.selectAll('circle.enemy')
             .data(createEnemies, function(enemy){ return enemy.id;});
-
-
-// var tweenToNextPosition = function(){
-//   var enemy = d3.select(this);
-//   console.log(enemy)
-//   var oldX = enemy.x;
-//   console.log(oldX)
-//   var oldY = enemy.y;
-//   enemy.x = axes.x(Math.random()*100);
-//   console.log(enemy.x);
-//   enemy.y = axes.y(Math.random()*100);
-//   var deltaX=enemy.x-oldX;
-//   var deltaY=enemy.y-oldY;
-
-//   return function(t){
-//     return enemies.attr('cx', function(enemy){return oldX + deltaX * t})
-//                   .attr('cy',function(enemy){return oldY + deltaY * t})
-//   };
-// };
-
-
  enemies.enter()
     .append('svg:circle')
       .attr('class', 'enemy')
@@ -54,6 +38,23 @@ var enemies = gameBoard.selectAll('circle.enemy')
 enemies.exit()
   .remove()
 
+ var player = [{
+   'x' : axes.x(50),
+   'y' : axes.y(50),
+}]
+
+ var players = gameBoard.selectAll('circle.player')
+                    .data(player);
+
+ players.enter()
+  .append('svg:circle')
+   .attr('class', 'player')
+   .attr('cx', axes.x(50))
+   .attr('cy', axes.y(50))
+   .attr('r', 10)
+    .style({'fill': 'red','stroke':'red'})
+ players.exit()
+   .remove()
 
 
 var update = function(){
@@ -64,5 +65,5 @@ enemies.transition()
   //.tween('custom',tweenToNextPosition)
 }
 
- setInterval(update,1000);
+ //setInterval(update,1000);
 
