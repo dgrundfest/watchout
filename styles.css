@@ -2,7 +2,64 @@
 
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
+
+
+
 /*
-.gameboard{
-  border: solid;
-}*/
+.enemy {
+  animation:spin 4s linear infinite;
+}
+*/
+/*/*/*/
+
+/*.enemy {
+    width: 75;
+    animation-name: spin;
+    animation-duration: 5s;
+    animation-timing-function: linear;
+    animation-delay: 2s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+*//*
+.enemy {
+    -webkit-animation:spin 4s linear infinite;
+    -moz-animation:spin 4s linear infinite;
+    animation:spin 4s linear infinite;
+}
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+*/
+.body {
+  background-color: blue;
+}
+
+.enemy {
+    border : solid;
+    -webkit-animation: infinite rotate-block 2s;
+    -moz-animation: infinite rotate-block 2s;
+    -o-animation: infinite rotate-block 2s;
+    animation: infinite rotate-block 2s;
+    -webkit-transform-origin-x: initial;
+    -webkit-transform-origin-y: initial;
+    -webkit-transform-origin-z: initial;
+    border-left:10px solid #f15466;
+    border-radius: 50%
+}
+@-webkit-keyframes rotate-block {
+  0%   {-webkit-transform: rotate(0deg);}
+  100% {-webkit-transform: rotate(360deg);}
+}
+@-moz-keyframes rotate-block {
+  0%   {-moz-transform: rotate(0deg);}
+  100% {-moz-transform: rotate(360deg);}
+}
+@-o-keyframes rotate-block {
+  0%   {-o-transform: rotate(0deg);}
+  100% {-o-transform: rotate(360deg);}
+}
+@keyframes rotate-block {
+  0%   {transform: rotate(0deg);}
+  100% {transform: rotate(360deg);}
+}

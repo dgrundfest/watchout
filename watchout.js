@@ -22,20 +22,22 @@ var createEnemies = _.range(0,10).map(function(i){
     return enemy;
   });
 
-var enemies = gameBoard.selectAll('circle.enemy')
+var enemies = gameBoard.selectAll('image.enemy')
             .data(createEnemies, function(enemy){ return enemy.id;});
  enemies.enter()
-    .append('svg:circle')
-      .attr('class', 'enemy')
-      .attr('cx', function(enemy){
+    .append('svg:image')
+      .attr('class','enemy')
+      .attr('x', function(enemy){
         return enemy.x;
       })
-      .attr('cy', function(enemy){
+      .attr('y', function(enemy){
         return enemy.y;
       })
-      .attr('r', 10)
-// enemies.exit()
-//   .remove()
+      .attr("xlink:href", "Shuriken.png")
+      .attr('width', 60)
+      .attr('height',60)
+
+
 
 var drag = d3.behavior.drag()
              .on('dragstart', function() { players.style({'fill' : 'green', 'stroke': 'green'}); })
@@ -65,27 +67,28 @@ var drag = d3.behavior.drag()
 
 var update = function(){
 enemies.transition()
-  .duration(1000)
-   .attr('cx', function(enemy){enemy.x = axes.x(Math.random()*100); return enemy.x;})
-   .attr('cy', function(enemy){enemy.y = axes.y(Math.random()*100); return enemy.y;})
+  .duration(function(enemy){ return Math.max(1000, enemy.id * 100)})
+   .attr('x', function(enemy){enemy.x = axes.x(Math.random()*100); return enemy.x;})
+   .attr('y', function(enemy){enemy.y = axes.y(Math.random()*100); return enemy.y;})
    .tween('custom',checkCollisionTween);
     setInterval(upDateScore,100);
 }
 
 
 var checkCollisionTween = function(){
-var radiusSum = 20;
+var radiusSum = 25;
+var hasCollided = false;
 return function(){
-    var eX = d3.select(this).attr("cx");
-    var eY = d3.select(this).attr("cy");
+    var eX = d3.select(this).attr("x");
+    var eY = d3.select(this).attr("y");
     var pX = d3.selectAll("circle.player").attr("cx");
     var pY = d3.selectAll("circle.player").attr("cy");
     var xDiff=eX - pX;
     var yDiff=eY - pY;
     var dist = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
-    if(dist < radiusSum){
+    if(dist < radiusSum && !hasCollided){
       window.collisions++;
-      console.log(window.collisions);
+      hasCollided = true;
     }
   }
 };
