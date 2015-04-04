@@ -14,7 +14,7 @@ var gameBoard = d3.select('body').append('svg:svg')
 
 
 
-var createEnemies = _.range(0,100).map(function(i){
+var createEnemies = _.range(0,20).map(function(i){
     var enemy = {};
     enemy['id'] = i;
     enemy['x'] = axes.x(Math.random()*100);
@@ -38,6 +38,19 @@ var enemies = gameBoard.selectAll('circle.enemy')
 enemies.exit()
   .remove()
 
+
+
+
+
+var drag = d3.behavior.drag()
+             .on('dragstart', function() { players.style({'fill' : 'green', 'stroke': 'green'}); })
+             .on('drag', function() { players.attr('cx', d3.event.x)
+                                            .attr('cy', d3.event.y); })
+             .on('dragend', function() { players.style({'fill': 'red', 'stroke': 'red'});});
+
+
+
+
  var player = [{
    'x' : axes.x(50),
    'y' : axes.y(50),
@@ -53,6 +66,7 @@ enemies.exit()
    .attr('cy', axes.y(50))
    .attr('r', 10)
     .style({'fill': 'red','stroke':'red'})
+    .call(drag)
  players.exit()
    .remove()
 
@@ -65,5 +79,5 @@ enemies.transition()
   //.tween('custom',tweenToNextPosition)
 }
 
- //setInterval(update,1000);
+ setInterval(update,1000);
 
