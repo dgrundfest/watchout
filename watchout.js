@@ -1,6 +1,7 @@
 // start slingin' some d3 here.
-window.score = 0;
+window.timeElapsed = 0;
 window.collisions=0;
+window.highScore = 0;
 
 var axes ={
   'x': d3.scale.linear().domain([0,100]).range([0,700]),
@@ -68,6 +69,7 @@ enemies.transition()
    .attr('cx', function(enemy){enemy.x = axes.x(Math.random()*100); return enemy.x;})
    .attr('cy', function(enemy){enemy.y = axes.y(Math.random()*100); return enemy.y;})
    .tween('custom',checkCollisionTween);
+    setInterval(upDateScore,100);
 }
 
 
@@ -86,6 +88,17 @@ return function(){
       console.log(window.collisions);
     }
   }
+};
+
+var upDateScore = function(){
+  window.timeElapsed++;
+  var score = Math.trunc(window.timeElapsed / 100 - window.collisions);
+  if(score > window.highScore){
+    window.highScore = score
+  }
+  document.getElementById("collisioncount").textContent=window.collisions;
+  document.getElementById("currentscore").textContent=score;
+  document.getElementById("currenthighscore").textContent=window.highScore;
 };
 
  setInterval(update,1000);
